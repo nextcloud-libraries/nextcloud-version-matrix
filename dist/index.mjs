@@ -58398,11 +58398,40 @@ url_exist__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? 
 
 const client = new _actions_http_client__WEBPACK_IMPORTED_MODULE_7__/* .HttpClient */ .Qq('nextcloud-version-matrix')
 
+// Known PHP version ranges of the stable branches of nextcloud/server.
+// Values match what parsing lib/versioncheck.php of the branch would yield.
+const KNOWN_PHP_VERSION_RANGES = {
+    stable22: {min: 7.3, max: 8.0},
+    stable23: {min: 7.3, max: 8.0},
+    stable24: {min: 7.4, max: 8.1},
+    stable25: {min: 7.4, max: 8.1},
+    stable26: {min: 8.0, max: 8.2},
+    stable27: {min: 8.0, max: 8.2},
+    stable28: {min: 8.0, max: 8.3},
+    stable29: {min: 8.0, max: 8.3},
+    stable30: {min: 8.1, max: 8.3},
+    stable31: {min: 8.1, max: 8.4},
+    stable32: {min: 8.1, max: 8.4},
+    stable33: {min: 8.2, max: 8.5},
+    stable34: {min: 8.2, max: 8.5},
+    stable35: {min: 8.3, max: 8.5},
+};
+
+// PHP versions known to have a php-src release tag.
+const KNOWN_RELEASED_PHP_VERSIONS = new Set([
+    '7.0', '7.1', '7.2', '7.3', '7.4',
+    '8.0', '8.1', '8.2', '8.3', '8.4', '8.5',
+]);
+
 function versionHashBranch(version) {
     return (0,url_exist__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .A)(`https://github.com/nextcloud/server/tree/stable${version}`);
 }
 
 async function getBranch(version) {
+    if (KNOWN_PHP_VERSION_RANGES[`stable${version}`]) {
+        return `stable${version}`;
+    }
+
     if (await versionHashBranch(version)) {
         return `stable${version}`;
     } else {
@@ -58415,6 +58444,10 @@ function range(from, to) {
 }
 
 async function getSupportedVersions(branch) {
+    if (KNOWN_PHP_VERSION_RANGES[branch]) {
+        return {...KNOWN_PHP_VERSION_RANGES[branch]};
+    }
+
     // yes, this is hacky, but it saves having to keep a list updated
     let res = await client.get(`https://raw.githubusercontent.com/nextcloud/server/${branch}/lib/versioncheck.php`);
     let versionCheckCode = await res.readBody();
@@ -58436,6 +58469,11 @@ function parseVersionId(raw) {
 }
 
 async function isPhpVersionReleased(version) {
+    const shortVersion = version.toFixed(1);
+    if (KNOWN_RELEASED_PHP_VERSIONS.has(shortVersion)) {
+        return true;
+    }
+
     return await (0,url_exist__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .A)(`https://github.com/php/php-src/releases/tag/php-${version.toFixed(1)}.0`);
 }
 
