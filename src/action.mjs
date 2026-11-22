@@ -26,12 +26,13 @@ const KNOWN_PHP_VERSION_RANGES = {
     stable33: {min: 8.2, max: 8.5},
     stable34: {min: 8.2, max: 8.5},
     stable35: {min: 8.3, max: 8.5},
+    stable36: {min: 8.3, max: 8.6},
 };
 
 // PHP versions known to have a php-src release tag.
 const KNOWN_RELEASED_PHP_VERSIONS = new Set([
     '7.0', '7.1', '7.2', '7.3', '7.4',
-    '8.0', '8.1', '8.2', '8.3', '8.4', '8.5',
+    '8.0', '8.1', '8.2', '8.3', '8.4', '8.5', '8.6',
 ]);
 
 function versionHashBranch(version) {
