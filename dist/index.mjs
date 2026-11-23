@@ -58415,7 +58415,7 @@ const KNOWN_PHP_VERSION_RANGES = {
     stable33: {min: 8.2, max: 8.5},
     stable34: {min: 8.2, max: 8.5},
     stable35: {min: 8.3, max: 8.5},
-    stable36: {min: 8.3, max: 8.6},
+    // stable36: {min: 8.3, max: 8.6},
 };
 
 // PHP versions known to have a php-src release tag.
